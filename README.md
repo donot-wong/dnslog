@@ -25,7 +25,6 @@ git clone https://github.com/donot-wong/dnslog.git
 ``` 
 
 3. 修改配置
-
 首先需要准备两个域名，一个做dns服务域名(如dns.com)，一个做dnslog/weblog记录域名(如example.cn)，一个部署服务的公网ip(120.24.224.32)
 	1. 在dns.com域名的解析记录中增加两条A记录
 		ns1.dns.com 120.24.224.32
@@ -53,7 +52,7 @@ cd dnslog
 sudo docker build -t dnslog:v1 .
 ```
 
-5. 启动容器
+5. 启动服务
 ```
 sudo docker run --name dnslog -d -p 53:53/udp -p 127.0.0.1:8082:8000 dnslog:v1
 ```
@@ -90,7 +89,31 @@ server {
 }
 ```
 
-效果
+使用效果
 ---
 
+1. 默认密码
+donot/123456
+
+2. 修改密码
+可通过后台或使用Django命令行进行修改
+
+```
+sudo docker exec -it dnslog /bin/bash
+cd /usr/src/app
+python manage.py changepassword donot
+```
+
+3. 记录weblog
+donot用户默认二级域名前缀为xxx，即访问{data}.xxx.example.cn记录下的内容对donot用户才可见，非xxx二级域名记录的log对donot用户不可见，一个用户对应一个二级域名
+```
+curl http://weblog.xxx.example.cn/?this_is_a_test
+```
+![](./images/2.png)
+
+4. 记录dnslog
+donot用户默认二级域名前缀为xxx，即{data}.xxx.example.cn的解析记录对donot用户可见，非xxx二级域名下级dns解析log对donot用户不可见
+![](./images/3.png)
+
+4. 界面
 ![](./images/1.png)

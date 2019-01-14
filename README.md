@@ -25,8 +25,24 @@ git clone https://github.com/donot-wong/dnslog.git
 ``` 
 
 3. 修改配置
+首先需要准备两个域名，一个做dns服务域名(如dns.com)，一个做dnslog/weblog记录域名(如example.cn)，一个部署服务的公网ip(120.24.224.32)
+	1. 在dns.com域名的解析记录中增加两条A记录
+		ns1.dns.com 120.24.224.32
+		ns2.dns.com 120.24.224.32
+	2. 在域名注册商处修改example.cn的dns server为ns1.dns.com和ns2.dns.com
 
+\dnslog\settings.py
 ```
+ALLOWED_HOSTS = ['.example.cn'] # 域名
+
+...
+DNS_DOMAIN = 'example.cn'
+ADMIN_DOMAIN = 'admin.example.cn' # 后台域名
+
+NS1_DOMAIN = 'ns1.dns.com' # dns服务1
+NS2_DOMAIN = 'ns2.dns.com' # dns服务2
+
+SERVER_IP = '120.24.224.32' # 外网ip
 ```
 
 4. 编译镜像
@@ -71,8 +87,6 @@ server {
 	}
 }
 ```
-
-...未完待续
 
 效果
 ---

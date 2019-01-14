@@ -12,3 +12,20 @@
 
 本版本是对原四叶草 BugscanTeam 打造的监控 DNS 解析记录和 HTTP 访问记录的工具DNSLog的修改版本。遵循GPL2。
 
+
+安装（Docker）
+---
+
+1. 环境准备
+Docker环境
+
+2. 获取源代码
+```
+git clone https://github.com/donot-wong/dnslog.git
+``` 
+
+3. 修改配置
+
+```
+```
+

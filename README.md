@@ -37,7 +37,7 @@ sudo docker build -t dnslog:v1 .
 
 5. 启动容器
 ```
-sudo docker run --name dnslog -d -p 53:53/udp -p 127.0.0.1:8082 dnslog:v1
+sudo docker run --name dnslog -d -p 53:53/udp -p 127.0.0.1:8082:8000 dnslog:v1
 ```
 
 6. 配置nginx反向代理

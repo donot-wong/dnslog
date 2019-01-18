@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+
+<head>
+
+    <meta charset="utf-8">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>用户</title>
+
+    <link href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+    <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/jquery.min.js"></script>
+    <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <link href="/static/main.css" rel="stylesheet">
+
+    
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <ul class="nav nav-tabs">
+
+          <li role="presentation" {% ifequal type 'dns'%}class="active"{% endifequal%}><a href="/logview/dnslog">DNSLog</a></li>
+
+          <li role="presentation" {% ifequal type 'web'%}class="active"{% endifequal%}><a href="/logview/weblog">WebLog</a></li>
+          
+          <li role="presentation" {% ifequal type 'manage'%}class="active"{% endifequal%}><a href="/logview/manage">Manage</a></li>
+
+          <!-- <li role="presentation"><a href="/selfinfo/">selfinfo</a></li> -->
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/logview/logout">Logout</a></li>  
+          </ul>
+        </ul>
+
+        {% ifequal type 'manage'%}
+
+        <div class="bs" data-example-id="hoverable-table">
+
+            <table class="table table-hover">
+
+              <thead>
+
+                <tr>
+
+                  <th>#</th>
+
+                  <th>username</th>
+
+                  <th>subdomain</th>
+
+                  <th>date</th>
+
+                  <th>manage</th>
+                </tr>
+
+              </thead>
+
+              <tbody>
+
+                {% for user in users %}
+
+                <tr>
+
+                <th scope="row">{{user.id}}</th>
+
+                <td>{{ user.user }}</td>
+
+                <td>{{ user.subdomain }}</td>
+
+                <td>{{ user.add_time|date:'Y-m-d H:i:s' }}</td>
+
+                <td><a href="#">edit</a>
+
+                  {% ifnotequal user.id 1%}
+                  <a href="#">del</a></td>
+                  {% endifnotequal %}
+
+                </tr>
+
+                {% endfor %}
+
+              </tbody>
+
+            </table>
+
+            <nav>
+
+              <ul class="pagination">
+
+                <li><a class="btn btn-default" href="logview/manage/add" role="button">add</a></li>
+
+                {% ifnotequal userpage 1%}
+
+                <li>
+
+                  <a href="/logview/manage?userpage={{userpage | add:-1}}" aria-label="Previous">
+
+                    <span aria-hidden="true">&laquo;</span>
+
+                  </a>
+
+                </li>
+
+                {% endifnotequal %}
+
+                {% for range in pagerange %}
+
+                <li><a href="/logview/manage?userpage={{range}}">{{range}}</a></li>
+
+                {% endfor %}
+
+                {% ifnotequal userpage numpages%}
+
+                <li>
+
+                  <a href="/logview/manage?userpage={{userpage|add:1}}" aria-label="Next">
+
+                    <span aria-hidden="true">&raquo;</span>
+
+                  </a>
+
+                </li>
+
+                {% endifnotequal%}
+
+              </ul>
+
+            </nav>
+
+
+
+        </div>
+
+        {% endifequal%}
+
+    </div>
+
+</body>
+
+</html>

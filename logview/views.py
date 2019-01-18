@@ -176,6 +176,44 @@ def clear(request, type):
 	else:
 		return HttpResponseNotFound('Not Found')
 
+@login_required(login_url='/logview/login')
+def manage(request):
+	user = request.user
+	if user.is_superuser:
+		vardict = {}
+		userpage = getpage(request.GET.get("userpage", 1))
+		paginator = Paginator(UserSubDomain.objects.all(), 10)
+		try:
+			users = paginator.page(userpage)
+		except (EmptyPage, InvalidPage, PageNotAnInteger):
+			userpage = paginator.num_pages
+			users = paginator.page(paginator.num_pages)
+		vardict['type'] = 'manage'
+		vardict['userpage'] = userpage
+		vardict['pagerange'] = paginator.page_range
+		vardict['users'] = users
+		vardict['numpages'] = paginator.num_pages
+
+		return render(request, 'logview/manage.html', vardict)
+	else:
+		return redirect('/logview/dnslog')
 
 
-
+@login_required(login_url='/logview/login')
+def manage_user_add(request):
+	user = request.user
+	if user.is_superuser:
+		from django.db import transaction
+		try:
+			with transaction.atomic():
+				adduser = User.objects.create_user(username='test', password="123456")
+				usersubdomain = UserSubDomain(user=adduser, subdomain='xx2', status=1)
+				apikey = ApiKey(user=adduser, key='1234567891234567891234567891234567891234', status=1)
+				usersubdomain.save()
+				apikey.save()
+				return HttpResponse("Ok")
+		except Exception as e:
+			print(e)
+			return HttpResponse("Failed")
+	else:
+		return redirect('/logview/dnslog')

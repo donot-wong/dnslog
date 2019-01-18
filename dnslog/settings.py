@@ -25,7 +25,9 @@ SECRET_KEY = '=ni)^=sz6jogjy2-lm&v)uxl+k_r3&+iv6alq($4#(&9=v$bx)'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.sqvds.cn']
+# ALLOWED_HOSTS = ['.sqvds.cn']
+ALLOWED_HOSTS = ['.test.com']
+
 
 
 # Application definition
@@ -121,8 +123,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-DNS_DOMAIN = 'sqvds.cn'
-ADMIN_DOMAIN = 'admin.sqvds.cn' #admin.sqvds.cn
+# DNS_DOMAIN = 'sqvds.cn'
+DNS_DOMAIN = 'test.com'
+# ADMIN_DOMAIN = 'admin.sqvds.cn'
+ADMIN_DOMAIN = 'admin.test.com'
+
 
 NS1_DOMAIN = 'ns1.donot.me'
 NS2_DOMAIN = 'ns2.donot.me'

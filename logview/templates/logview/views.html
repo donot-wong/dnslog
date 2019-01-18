@@ -26,11 +26,15 @@
 
         <ul class="nav nav-tabs">
 
-          <li role="presentation" {% ifequal logtype 'dns'%}class="active"{% endifequal%}><a href="/logview/dnslog">DNSLog</a></li>
+          <li role="presentation" {% ifequal type 'dns'%}class="active"{% endifequal%}><a href="/logview/dnslog">DNSLog</a></li>
 
-          <li role="presentation" {% ifequal logtype 'web'%}class="active"{% endifequal%}><a href="/logview/weblog">WebLog</a></li>
+          <li role="presentation" {% ifequal type 'web'%}class="active"{% endifequal%}><a href="/logview/weblog">WebLog</a></li>
           
-          <!-- <li role="presentation"><a href="/selfinfo/">selfinfo</a></li> -->
+          {% if user.is_superuser %}
+
+          <li role="presentation"><a href="/logview/manage">Manage</a></li>
+
+          {% endif %}
           <ul class="nav navbar-nav navbar-right">
             <li><a href="/logview/logout">Logout</a></li>  
           </ul>

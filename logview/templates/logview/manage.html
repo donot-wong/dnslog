@@ -13,8 +13,6 @@
     <title>用户</title>
 
     <link href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
-    <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/jquery.min.js"></script>
-    <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <link href="/static/main.css" rel="stylesheet">
 
     
@@ -76,10 +74,10 @@
 
                 <td>{{ user.add_time|date:'Y-m-d H:i:s' }}</td>
 
-                <td><a href="#">edit</a>
+                <td><a href="#" onclick="editUser({{user.id}})">edit</a>
 
                   {% ifnotequal user.id 1%}
-                  <a href="#">del</a></td>
+                  <a href="#" onclick="delUser({{user.id}})">del</a></td>
                   {% endifnotequal %}
 
                 </tr>
@@ -94,7 +92,7 @@
 
               <ul class="pagination">
 
-                <li><a class="btn btn-default" href="logview/manage/add" role="button">add</a></li>
+                <li><a class="btn btn-default" href="#" role="button" onclick="showAddModal()">add</a></li>
 
                 {% ifnotequal userpage 1%}
 
@@ -141,7 +139,75 @@
         {% endifequal%}
 
     </div>
-
+    <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="addUserModalTitle" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="addUserModalTitle">新增用户</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="text" name="username">
+                    <input type="password" name="password">
+                    <input type="text" name="subdomain">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" id="addUserModalButton">提交更改</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="editUserModalTitle" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                  <h4 class="modal-title" id="editUserModalTitle">新增用户</h4>
+              </div>
+              <div class="modal-body">
+                  <input type="text" name="username">
+                  <input type="password" name="password">
+                  <input type="text" name="subdomain">
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                  <button type="button" class="btn btn-primary" id="editUserModalButton">提交更改</button>
+              </div>
+          </div><!-- /.modal-content -->
+      </div><!-- /.modal -->
+    </div>
+    <div class="modal fade" id="delUserModal" tabindex="-1" role="dialog" aria-labelledby="delUserModalTitle" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                  <h4 class="modal-title" id="editUserModalTitle">新增用户</h4>
+              </div>
+              <div class="modal-body">
+                  <input type="text" name="username">
+                  <input type="password" name="password">
+                  <input type="text" name="subdomain">
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                  <button type="button" class="btn btn-primary" id="delUserModalButton">提交更改</button>
+              </div>
+          </div><!-- /.modal-content -->
+      </div><!-- /.modal -->
+    </div>
+    <script type="text/javascript">
+      function showAddModal(){
+        $("#addUserModal").modal("show");
+      }
+      function editUser(id){
+        $("#editUserModal").modal("show");
+      }
+      function delUser(id){
+        $("#delUserModal").modal("show");
+      }
+    </script>
 </body>
-
+<script src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
 </html>

@@ -4,9 +4,10 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, InvalidPage, EmptyPage, PageNotAnInteger
-from django.http import HttpResponseNotFound, HttpResponseRedirect
+from django.http import HttpResponseNotFound, HttpResponseRedirect, JsonResponse
 from dnslog import settings
-from hashlib import sha512
+from hashlib import sha1
+import re
 import random
 import string
 from api.models import *
@@ -156,12 +157,12 @@ def getpage(p):
     return page
 
 
-@login_required(login_url='/logview/login')
-def api_add(request):
+def genapikey():
 	randstr = ''.join(random.sample(string.ascii_letters + string.digits, 8))
-	sh = sha512()
+	sh = sha1()
 	sh.update(randstr.encode('utf-8'))
 	key = sh.hexdigest()
+	return key
 
 
 @login_required(login_url='/logview/login')
@@ -200,20 +201,69 @@ def manage(request):
 
 
 @login_required(login_url='/logview/login')
+def manage_user_del(request):
+	userid = request.POST['id']
+	user = User.objects.filter(id=userid)
+	try:
+		if len(user) == 1:
+			user[0].delete()
+			ret = {'status': 1, 'msg': 'Ok'}
+		else:
+			ret = {'status': -1, 'msg': 'user error!'}
+	except Exception as e:
+		ret = {'status': -1, 'msg': e}
+	return JsonResponse(ret)
+
+
+@login_required(login_url='/logview/login')
 def manage_user_add(request):
 	user = request.user
 	if user.is_superuser:
+		username = request.POST['username']
+		password = request.POST['password']
+		subdomain = request.POST['subdomain']
+
+		# form data check
+		if not re.match(r'^[a-zA-Z0-9]+$',  username):
+			ret = {'status': -1, 'msg': 'username not vaild!'}
+			return JsonResponse(ret)
+		if password == '':
+			ret = {'status': -1, 'msg': 'password can not be empty!'}
+			return JsonResponse(ret)
+
+		if subdomain == '':
+			randomStr = ''.join(random.sample(string.ascii_letters + string.digits, 5))
+			checkSubdomain = UserSubDomain.objects.filter(subdomain=randomStr)
+			while checkSubdomain:
+				randomStr = ''.join(random.sample(string.ascii_letters + string.digits, 5))
+			subdomain = randomStr
+		else:
+			checkSubdomain = UserSubDomain.objects.filter(subdomain=subdomain)
+			if checkSubdomain:
+				ret = {'status': -1, 'msg': 'subdomain already exist!'}
+				return JsonResponse(ret)
+
+
+		# infomation exist check
+		checkUser = User.objects.filter(username=username)
+		if checkUser:
+			ret = {'status': -1, 'msg': 'username already exist!'}
+			return JsonResponse(ret)
+
+		# database
 		from django.db import transaction
 		try:
 			with transaction.atomic():
-				adduser = User.objects.create_user(username='test', password="123456")
-				usersubdomain = UserSubDomain(user=adduser, subdomain='xx2', status=1)
-				apikey = ApiKey(user=adduser, key='1234567891234567891234567891234567891234', status=1)
+				adduser = User.objects.create_user(username=username, password=password)
+				usersubdomain = UserSubDomain(user=adduser, subdomain=subdomain, status=1)
+				apikey = ApiKey(user=adduser, key=genapikey(), status=1)
 				usersubdomain.save()
 				apikey.save()
-				return HttpResponse("Ok")
+				ret = {'status': 1, 'msg': 'Ok'}
+				return JsonResponse(ret)
 		except Exception as e:
-			print(e)
-			return HttpResponse("Failed")
+			# print(e)
+			ret = {'status': 1, 'msg': e}
+			return JsonResponse(ret)
 	else:
 		return redirect('/logview/dnslog')

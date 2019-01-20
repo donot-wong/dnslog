@@ -74,10 +74,10 @@
 
                 <td>{{ user.add_time|date:'Y-m-d H:i:s' }}</td>
 
-                <td><a href="#" onclick="editUser({{user.id}})">edit</a>
+                <td><!-- <a href="#" onclick="editUser({{user.user.id}})">edit</a> -->
 
                   {% ifnotequal user.id 1%}
-                  <a href="#" onclick="delUser({{user.id}})">del</a></td>
+                  <a href="#" onclick="delUser({{user.user.id}})">del</a></td>
                   {% endifnotequal %}
 
                 </tr>
@@ -147,13 +147,22 @@
                     <h4 class="modal-title" id="addUserModalTitle">新增用户</h4>
                 </div>
                 <div class="modal-body">
-                    <input type="text" name="username">
-                    <input type="password" name="password">
-                    <input type="text" name="subdomain">
+                    <div class="form-group">
+                      <label for="InputUsername">用户名</label>
+                      <input type="email" class="form-control" id="addInputUsername" placeholder="Username">
+                    </div>
+                    <div class="form-group">
+                      <label for="InputPassword">密码</label>
+                      <input type="password" class="form-control" id="addInputPassword" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                      <label for="InputSubdomain">子域名前缀</label>
+                      <input type="text" class="form-control" id="addInputSubdomain" placeholder="Subdomain">
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-primary" id="addUserModalButton">提交更改</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="addUserModalButton">确认</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal -->
@@ -163,12 +172,21 @@
           <div class="modal-content">
               <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                  <h4 class="modal-title" id="editUserModalTitle">新增用户</h4>
+                  <h4 class="modal-title" id="editUserModalTitle">编辑用户</h4>
               </div>
               <div class="modal-body">
-                  <input type="text" name="username">
-                  <input type="password" name="password">
-                  <input type="text" name="subdomain">
+                    <div class="form-group">
+                      <label for="InputUsername">用户名</label>
+                      <input type="email" class="form-control" id="editInputUsername" placeholder="Username">
+                    </div>
+                    <div class="form-group">
+                      <label for="InputPassword">密码</label>
+                      <input type="password" class="form-control" id="editInputPassword" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                      <label for="InputSubdomain">子域名前缀</label>
+                      <input type="text" class="form-control" id="editInputSubdomain" placeholder="Subdomain">
+                    </div>
               </div>
               <div class="modal-footer">
                   <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -182,32 +200,67 @@
           <div class="modal-content">
               <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                  <h4 class="modal-title" id="editUserModalTitle">新增用户</h4>
+                  <h4 class="modal-title" id="editUserModalTitle">删除用户</h4>
               </div>
               <div class="modal-body">
-                  <input type="text" name="username">
-                  <input type="password" name="password">
-                  <input type="text" name="subdomain">
+                  请确认删除该用户！该操作不可逆，用户所有历史数据均会删除！
               </div>
               <div class="modal-footer">
-                  <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                  <button type="button" class="btn btn-primary" id="delUserModalButton">提交更改</button>
+                  <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                  <button type="button" class="btn btn-primary" id="delUserModalButton">确认</button>
               </div>
           </div><!-- /.modal-content -->
       </div><!-- /.modal -->
     </div>
+    <script src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script src="//cdn.bootcss.com/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script type="text/javascript">
+      var userid = null;
       function showAddModal(){
         $("#addUserModal").modal("show");
+        $("#addInputSubdomain").val('aaaa');
       }
+      $("#addUserModalButton").click(function(){
+          var username = $("#addInputUsername").val();
+          var password = $("#addInputPassword").val();
+          var subdomain = $("#addInputSubdomain").val();
+          // var csrf
+          $.ajax({
+              url: '/logview/manage/add',
+              type: 'POST',
+              data: {username:username, password:password, subdomain: subdomain, csrfmiddlewaretoken:'{{ csrf_token  }}'},
+              success: function(data){
+                if (data.status == 1) {
+                    window.location.reload();
+                }else{
+                    alert(data.msg);
+                    // $("#addUserModal").modal("show");
+                }
+              }
+          });
+      })
       function editUser(id){
         $("#editUserModal").modal("show");
       }
       function delUser(id){
         $("#delUserModal").modal("show");
+        userid = id;
       }
+
+      $("#delUserModalButton").click(function(){
+          $.ajax({
+            url: '/logview/manage/del',
+            type: 'POST',
+            data: {id: userid, csrfmiddlewaretoken:'{{ csrf_token  }}'},
+            success: function(data){
+                if (data.status == 1) {
+                    window.location.reload();
+                }else{
+                    alert(data.msg);
+                }
+            }
+          })
+      })
     </script>
 </body>
-<script src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
-<script src="//cdn.bootcss.com/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
 </html>

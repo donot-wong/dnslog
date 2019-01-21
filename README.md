@@ -115,5 +115,5 @@ curl http://weblog.xxx.example.cn/?this_is_a_test
 donot用户默认二级域名前缀为xxx，即{data}.xxx.example.cn的解析记录对donot用户可见，非xxx二级域名下级dns解析log对donot用户不可见
 ![](./images/3.png)
 
-4. 界面
+4. 用户管理
 ![](./images/1.png)

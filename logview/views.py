@@ -13,6 +13,8 @@ import string
 from api.models import *
 from .models import *
 
+# default_logger = logging.getLogger("django")
+
 
 def index(request):
 	host = request.get_host()

@@ -1,0 +1,8 @@
+"GET /logview/logout HTTP/1.1" 302 0
+"GET /logview/ HTTP/1.1" 200 1472
+"GET / HTTP/1.1" 200 1472
+"GET /favicon.ico HTTP/1.1" 200 1472
+donot:123456
+"POST /logview/login HTTP/1.1" 302 0
+"GET /logview/dnslog HTTP/1.1" 200 2428
+"GET /favicon.ico HTTP/1.1" 200 1472

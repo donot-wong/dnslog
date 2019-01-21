@@ -11,10 +11,13 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+import logging
+import django.utils.log
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+# print(BASE_DIR)
+# BASE_LOG_DIR = os.path.join(BASE_DIR, "log")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -23,12 +26,67 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '=ni)^=sz6jogjy2-lm&v)uxl+k_r3&+iv6alq($4#(&9=v$bx)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # ALLOWED_HOSTS = ['.sqvds.cn']
 ALLOWED_HOSTS = ['.test.com']
 
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': True,
+#     'formatters': {
+#        'standard': {
+#             'format': '%(asctime)s [%(threadName)s:%(thread)d] [%(name)s:%(lineno)d] [%(module)s:%(funcName)s] [%(levelname)s]- %(message)s'
+#         },
+#         'simple': {
+#             'format': '[%(levelname)s][%(asctime)s][%(filename)s:%(lineno)d]%(message)s'
+#         },
+#         'collect': {
+#             'format': '%(message)s'
+#         }
+#     },
+#     'filters': {
+#     },
+#     'handlers': {
+#         'default': {
+#             'level':'INFO',
+#             'class':'logging.handlers.RotatingFileHandler',
+#             'filename': os.path.join(BASE_LOG_DIR, 'all.log'),     #日志输出文件
+#             'maxBytes': 1024 * 1024 * 5,                  #文件大小 
+#             'backupCount': 5,                         #备份份数
+#             'formatter':'collect',                   #使用哪种formatters日志格式
+#         },
+#         'error': {
+#             'level':'ERROR',
+#             'class':'logging.handlers.RotatingFileHandler',
+#             'filename': os.path.join(BASE_LOG_DIR, 'error.log'),
+#             'maxBytes':1024 * 1024 * 5,
+#             'backupCount': 5,
+#             'formatter':'standard',
+#         },
+#         'console':{
+#             'level': 'DEBUG',
+#             'class': 'logging.StreamHandler',
+#             'formatter': 'standard'
+#         },
 
+#         # 'request_handler': {
+#         #     'level':'DEBUG',
+#         #     'class':'logging.handlers.RotatingFileHandler',
+#         #     'filename': '/sourceDns/log/script.log', 
+#         #     'maxBytes': 1024*1024*5, 
+#         #     'backupCount': 5,
+#         #     'formatter':'standard',
+#         # },
+#     },
+#     'loggers': {
+#         'django': {
+#             'handlers': ['default'],
+#             'level': 'DEBUG',
+#             'propagate': False 
+#         },
+#     } 
+# }
 
 # Application definition
 

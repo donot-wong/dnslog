@@ -11,9 +11,10 @@ from dnslib import RR, QTYPE, RCODE, TXT
 from dnslib.server import DNSServer, DNSHandler, BaseResolver, DNSLogger
 from logview.models import *
 from dnslog import settings
-
+# import logging
 
 class MysqlLogger():
+    # default_logger = logging.getLogger("django")
     def log_data(self, dnsobj):
         pass
 
@@ -34,13 +35,14 @@ class MysqlLogger():
 
     def log_request(self, handler, request):
         domain = request.q.qname.__str__().lower()
+        # self.default_logger.info(domain)
         if domain.endswith(settings.DNS_DOMAIN + '.'):
             udomain = re.search(r'\.?([^\.]+)\.%s\.' % settings.DNS_DOMAIN,
                                 domain)
             if udomain:
-                user = UserSubDomain.objects.filter(subdomain__exact=udomain.group(1))
+                user = UserSubDomain.objects.filter(subdomain__iexact=udomain.group(1))
                 if not user and domain.strip(".") != settings.ADMIN_DOMAIN:
-                    user = UserSubDomain.objects.filter(udomain__exact='@')
+                    user = UserSubDomain.objects.filter(subdomain__exact='@')
                 if user:
                     dnslog = DnsLog(
                         user=user[0].user, host=domain, type=QTYPE[request.q.qtype])

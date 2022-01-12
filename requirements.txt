@@ -1,2 +1,2 @@
 Django==2.1.5
-dnslib==0.9.7
+dnslib==0.9.17
